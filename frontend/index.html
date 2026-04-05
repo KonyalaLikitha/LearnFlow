@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <span class="logo-icon">📚</span>
+        <span class="logo-text">StudyAI</span>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="home">
+            <span class="nav-icon">🏠</span><span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-page="analyzer">
+            <span class="nav-icon">🔬</span><span>Study Analyzer</span>
+        </a>
+        <a href="#" class="nav-item" data-page="flashcards">
+            <span class="nav-icon">🃏</span><span>Flashcards</span>
+        </a>
+        <a href="#" class="nav-item" data-page="history">
+            <span class="nav-icon">🕐</span><span>History</span>
+        </a>
+        <a href="#" class="nav-item" data-page="settings">
+            <span class="nav-icon">⚙️</span><span>Settings</span>
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="user-badge">
+            <span class="user-avatar">🎓</span>
+            <span class="user-name">Student</span>
+        </div>
+    </div>
+</aside>
+
+<!-- Main -->
+<div class="main-wrapper">
+
+    <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-right">
+            <span class="status-dot" id="status-dot"></span>
+            <span class="status-text" id="status-text">Ready</span>
+        </div>
+    </header>
+
+    <!-- PAGE: Dashboard -->
+    <main class="page active" id="page-home">
+        <div class="page-content">
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>Welcome back! 👋</h1>
+                    <p>Ready to study smarter? Paste your notes and let AI do the heavy lifting.</p>
+                    <button class="btn btn-primary" onclick="showPage('analyzer')">Start Analyzing →</button>
+                </div>
+                <div class="welcome-art">🎓</div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-sessions">0</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🃏</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-flashcards">0</div>
+                        <div class="stat-label">Flashcards</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💡</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-concepts">0</div>
+                        <div class="stat-label">Concepts</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-tile" onclick="showPage('analyzer')">
+                    <div class="tile-icon">🔬</div>
+                    <h3>Study Analyzer</h3>
+                    <p>Paste text or upload PDF to get AI-generated summary, concepts and flashcards</p>
+                </div>
+                <div class="feature-tile" onclick="showPage('flashcards')">
+                    <div class="tile-icon">🃏</div>
+                    <h3>Flashcards</h3>
+                    <p>Review your generated flashcards with an interactive flip-card experience</p>
+                </div>
+                <div class="feature-tile" onclick="showPage('history')">
+                    <div class="tile-icon">🕐</div>
+                    <h3>History</h3>
+                    <p>Browse your previous study sessions and revisit past outputs</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: Study Analyzer -->
+    <main class="page" id="page-analyzer">
+        <div class="page-content">
+            <div class="page-header">
+                <h2>🔬 Study Analyzer</h2>
+                <p>Paste your study material below and generate AI-powered learning outputs</p>
+            </div>
+
+            <div class="analyzer-grid">
+                <div class="input-panel">
+                    <div class="panel-card">
+                        <label class="panel-label">📄 Paste Study Material</label>
+                        <textarea id="study-text" placeholder="Paste your notes, textbook content, lecture slides or any study material here..."></textarea>
+                    </div>
+
+                    <div class="panel-card">
+                        <label class="panel-label">📁 Or Upload a File</label>
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-icon">☁️</div>
+                            <p>Drag & drop or click to browse</p>
+                            <span class="upload-hint">PDF or TXT supported</span>
+                            <input type="file" id="file-input" accept=".pdf,.txt" hidden>
+                        </div>
+                        <div id="file-name" class="file-badge" style="display:none;"></div>
+                    </div>
+
+                    <button class="btn btn-primary btn-full" id="analyze-btn">
+                        <span class="btn-text">✨ Generate Learning Output</span>
+                        <span class="btn-loader" style="display:none;">
+                            <span class="spinner"></span> Analyzing...
+                        </span>
+                    </button>
+
+                    <div id="error-msg" class="error-banner" style="display:none;"></div>
+                </div>
+
+                <div class="output-panel" id="output-panel" style="display:none;">
+                    <div class="result-card" id="summary-card">
+                        <div class="result-header">
+                            <h3>📝 Summary</h3>
+                            <button class="copy-btn" onclick="copyText('summary-content')">📋 Copy</button>
+                        </div>
+                        <p id="summary-content" class="summary-text"></p>
+                    </div>
+
+                    <div class="result-card" id="concepts-card">
+                        <div class="result-header">
+                            <h3>💡 Key Concepts</h3>
+                            <button class="copy-btn" onclick="copyText('concepts-content')">📋 Copy</button>
+                        </div>
+                        <div id="concepts-content"></div>
+                    </div>
+
+                    <div class="result-card" id="fc-preview-card">
+                        <div class="result-header">
+                            <h3>🃏 Flashcards</h3>
+                            <button class="copy-btn" onclick="showPage('flashcards')">View All →</button>
+                        </div>
+                        <p class="fc-preview-hint">Click "View All" to open the interactive flashcard viewer</p>
+                        <div id="fc-count-badge" class="fc-count-badge"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: Flashcards -->
+    <main class="page" id="page-flashcards">
+        <div class="page-content">
+            <div class="page-header">
+                <h2>🃏 Flashcards</h2>
+                <p>Click a card to flip it and reveal the answer</p>
+            </div>
+
+            <div id="no-flashcards" class="empty-state">
+                <div class="empty-icon">🃏</div>
+                <h3>No flashcards yet</h3>
+                <p>Go to Study Analyzer and generate learning output first</p>
+                <button class="btn btn-primary" onclick="showPage('analyzer')">Go to Analyzer</button>
+            </div>
+
+            <div id="flashcard-viewer" style="display:none;">
+                <div class="fc-progress">
+                    <span id="fc-counter">1 / 5</span>
+                    <div class="fc-progress-bar">
+                        <div class="fc-progress-fill" id="fc-progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="fc-stage">
+                    <div class="flashcard" id="main-flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <span class="fc-label">Question</span>
+                                <p id="fc-question"></p>
+                                <span class="fc-tap-hint">Tap to flip</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <span class="fc-label">Answer</span>
+                                <p id="fc-answer"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fc-controls">
+                    <button class="btn btn-secondary" id="fc-prev">← Previous</button>
+                    <button class="btn btn-secondary" id="fc-flip">🔄 Flip</button>
+                    <button class="btn btn-primary"   id="fc-next">Next →</button>
+                </div>
+
+                <div class="fc-all-grid" id="fc-all-grid"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: History -->
+    <main class="page" id="page-history">
+        <div class="page-content">
+            <div class="page-header">
+                <h2>🕐 History</h2>
+                <p>Your recent study sessions</p>
+            </div>
+            <div id="history-list" class="history-list"></div>
+            <div id="no-history" class="empty-state" style="display:none;">
+                <div class="empty-icon">🕐</div>
+                <h3>No history yet</h3>
+                <p>Your study sessions will appear here after you analyze some text</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: Settings -->
+    <main class="page" id="page-settings">
+        <div class="page-content">
+            <div class="page-header">
+                <h2>⚙️ Settings</h2>
+                <p>Configure your study assistant</p>
+            </div>
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>🔑 API Configuration</h3>
+                    <div class="setting-row">
+                        <label>Backend URL</label>
+                        <input type="text" id="setting-api-url" value="http://127.0.0.1:5000" class="setting-input">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                </div>
+                <div class="settings-card">
+                    <h3>🗑️ Data</h3>
+                    <div class="setting-row">
+                        <label>Clear all saved history</label>
+                        <button class="btn btn-danger" onclick="clearHistory()">Clear History</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
