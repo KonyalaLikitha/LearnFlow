@@ -78,7 +78,7 @@ total_documents = chroma_collection.count()
 print(f"Successfully stored {total_documents} document chunks")
 
 # Gemini Configuration
-GEMINI_API_KEY = userdata.get('AIzaSyB6AJdyZI-rdNIra8_mCcYeMPndUVIoWgk')
+GEMINI_API_KEY = userdata.get('API_KEY')
 if not GEMINI_API_KEY:
     print("API key not found!")
 else:
