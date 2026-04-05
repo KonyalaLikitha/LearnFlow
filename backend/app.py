@@ -9,7 +9,7 @@ CORS(app)
 
 # ── Config ────────────────────────────────────────────────────────────────────
 # Get your free key at: https://openrouter.ai/keys
-OPENROUTER_API_KEY = "YOUR_API_KEY_HERE"
+OPENROUTER_API_KEY = "YOUR_OPENROUTER_API_KEY"
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODEL          = "openai/gpt-3.5-turbo"
@@ -40,14 +40,23 @@ def generate_learning_output(text: str) -> dict:
 
 From the given academic text generate:
 1. Summary (5 lines, simple explanation)
-2. Key Concepts (important terms with short definitions)
-3. Flashcards (exactly 5 Q&A pairs for revision)
+2. Key Concepts categorized into:
+   - core_concepts: most important terms students must know for exams (3-5 items)
+   - supporting_concepts: useful but less critical terms (3-5 items)
+3. Relationships between concepts as triples (5-8 items, meaningful connections only)
+4. Flashcards (exactly 5 Q&A pairs for revision)
 
 Return ONLY valid JSON in this exact format:
 {{
   "summary": "...",
-  "concepts": [
+  "core_concepts": [
     {{"term": "...", "definition": "..."}}
+  ],
+  "supporting_concepts": [
+    {{"term": "...", "definition": "..."}}
+  ],
+  "relationships": [
+    {{"source": "...", "relation": "...", "target": "..."}}
   ],
   "flashcards": [
     {{"question": "...", "answer": "..."}}
@@ -88,9 +97,11 @@ def analyze():
 
         result = generate_learning_output(text)
         return jsonify({
-            "summary":    result.get("summary", ""),
-            "concepts":   result.get("concepts", []),
-            "flashcards": result.get("flashcards", []),
+            "summary":             result.get("summary", ""),
+            "core_concepts":       result.get("core_concepts", []),
+            "supporting_concepts": result.get("supporting_concepts", []),
+            "relationships":       result.get("relationships", []),
+            "flashcards":          result.get("flashcards", []),
         })
 
     except json.JSONDecodeError:
