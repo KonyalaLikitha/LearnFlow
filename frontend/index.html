@@ -152,12 +152,41 @@
                         <p id="summary-content" class="summary-text"></p>
                     </div>
 
-                    <div class="result-card" id="concepts-card">
+                    <div class="result-card" id="core-concepts-card">
                         <div class="result-header">
-                            <h3>💡 Key Concepts</h3>
-                            <button class="copy-btn" onclick="copyText('concepts-content')">📋 Copy</button>
+                            <h3>🔥 Core Concepts</h3>
+                            <button class="copy-btn" onclick="copyText('core-concepts-content')">📋 Copy</button>
                         </div>
-                        <div id="concepts-content"></div>
+                        <div class="concepts-label">⭐ Most Important for Revision</div>
+                        <div id="core-concepts-content"></div>
+                    </div>
+
+                    <div class="result-card result-card--supporting" id="supporting-concepts-card">
+                        <div class="result-header">
+                            <h3>💡 Supporting Concepts</h3>
+                            <div class="result-header-right">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="toggle-supporting" checked>
+                                    Show
+                                </label>
+                                <button class="copy-btn" onclick="copyText('supporting-concepts-content')">📋 Copy</button>
+                            </div>
+                        </div>
+                        <div id="supporting-concepts-content"></div>
+                    </div>
+
+                    <div class="result-card" id="graph-card">
+                        <div class="result-header">
+                            <h3>🕸️ Knowledge Graph</h3>
+                            <div class="result-header-right">
+                                <span class="graph-legend"><span class="legend-core"></span>Core</span>
+                                <span class="graph-legend"><span class="legend-support"></span>Supporting</span>
+                            </div>
+                        </div>
+                        <div id="graph-text-list"></div>
+                        <div id="graph-svg-wrap">
+                            <svg id="knowledge-graph" width="100%" height="360"></svg>
+                        </div>
                     </div>
 
                     <div class="result-card" id="fc-preview-card">
@@ -189,6 +218,24 @@
             </div>
 
             <div id="flashcard-viewer" style="display:none;">
+
+                <!-- Toolbar -->
+                <div class="fc-toolbar">
+                    <div class="fc-toolbar-left">
+                        <button class="btn btn-secondary btn-sm" id="fc-shuffle">🔀 Shuffle</button>
+                        <button class="btn btn-secondary btn-sm" id="fc-restart">🔁 Restart</button>
+                    </div>
+                    <button class="btn btn-quiz" id="fc-quiz-toggle">🎯 Start Quiz Mode</button>
+                </div>
+
+                <!-- Quiz score bar (hidden in study mode) -->
+                <div class="quiz-scorebar" id="quiz-scorebar" style="display:none;">
+                    <span class="score-correct" id="score-correct">✅ 0 Correct</span>
+                    <span class="score-incorrect" id="score-incorrect">❌ 0 Incorrect</span>
+                    <span class="score-remaining" id="score-remaining">📋 5 Remaining</span>
+                </div>
+
+                <!-- Progress -->
                 <div class="fc-progress">
                     <span id="fc-counter">1 / 5</span>
                     <div class="fc-progress-bar">
@@ -196,13 +243,14 @@
                     </div>
                 </div>
 
+                <!-- Card -->
                 <div class="fc-stage">
                     <div class="flashcard" id="main-flashcard">
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
                                 <span class="fc-label">Question</span>
                                 <p id="fc-question"></p>
-                                <span class="fc-tap-hint">Tap to flip</span>
+                                <span class="fc-tap-hint" id="fc-tap-hint">Tap to flip</span>
                             </div>
                             <div class="flashcard-back">
                                 <span class="fc-label">Answer</span>
@@ -212,10 +260,26 @@
                     </div>
                 </div>
 
-                <div class="fc-controls">
+                <!-- Study mode controls -->
+                <div class="fc-controls" id="fc-study-controls">
                     <button class="btn btn-secondary" id="fc-prev">← Previous</button>
                     <button class="btn btn-secondary" id="fc-flip">🔄 Flip</button>
                     <button class="btn btn-primary"   id="fc-next">Next →</button>
+                </div>
+
+                <!-- Quiz mode controls -->
+                <div class="fc-controls" id="fc-quiz-controls" style="display:none;">
+                    <button class="btn btn-secondary" id="fc-show-answer">👁 Show Answer</button>
+                    <button class="btn btn-correct"   id="fc-mark-correct"   disabled>✅ Got it</button>
+                    <button class="btn btn-incorrect" id="fc-mark-incorrect" disabled>❌ Missed it</button>
+                </div>
+
+                <!-- Quiz result banner -->
+                <div class="quiz-result" id="quiz-result" style="display:none;">
+                    <div class="quiz-result-icon">🎉</div>
+                    <h3 id="quiz-result-title">Quiz Complete!</h3>
+                    <p  id="quiz-result-text"></p>
+                    <button class="btn btn-primary" id="fc-quiz-again">🔁 Try Again</button>
                 </div>
 
                 <div class="fc-all-grid" id="fc-all-grid"></div>
